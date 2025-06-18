@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="../src/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="../jquery.min.js"></script>
+    <script src="function.js"></script>
     <title>Panel Principal</title>
     <?php
         include_once("../conexion/validar_sesion.php");
