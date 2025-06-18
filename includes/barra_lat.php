@@ -19,10 +19,14 @@
         <a href="categoria.php" class="pl-10 py-5 pr-5 hover:bg-gray-400">Categoría</a>
         <a href="subcategoria.php" class="pl-10 py-5 pr-5 hover:bg-gray-400">Sub Categoría</a>
     </div>
-    <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">Ventas</a>
-    <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">Compras</a>
-    <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">Usuario</a>
-    <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">Reportes</a>
+    <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">
+        <i class="fa-solid fa-money-bill mr-2"></i>Ventas</a>
+    <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">
+        <i class="fa-solid fa-box-open mr-2"></i>Compras</a>
+    <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">
+        <i class="fa-solid fa-user-tie mr-2"></i>Usuario</a>
+    <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">
+        <i class="fa-solid fa-arrow-trend-up mr-2"></i>Reportes</a>
     <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">
         <i class="fa-solid fa-gear mr-2"></i>Configuracion</a>
     <a href="../login/logout.php" class="p-5 w-full text-gray-100 hover:bg-gray-400">
