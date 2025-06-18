@@ -1,4 +1,4 @@
-<div class="bg-gray-600 flex flex-col w-60">
+<div class="bg-sky-800 flex flex-col w-60">
 
     <a href="inicio.php" class="p-5 w-full text-gray-100 hover:bg-gray-400">
         <i class="fa-solid fa-house mr-2"></i>
@@ -6,18 +6,18 @@
     </a>
     <a href="cliente.php" class="p-5 w-full text-gray-100 hover:bg-gray-400">
         <i class="fa-solid fa-users mr-2"></i>Clientes</a>
-    <div href="producto.php" class="p-5 w-full text-gray-100 hover:bg-gray-400 flex justify-between items-center cursor-pointer"
+    <button class="p-5 w-full text-gray-100 hover:bg-gray-400 flex justify-between items-center cursor-pointer"
         onclick="document.getElementById('btnProductos').classList.toggle('hidden'); document.getElementById('icono').classList.toggle('fa-caret-down');">
         <div>
             <i class="fa-solid fa-cart-shopping mr-2"></i>
             Inventario
         </div>
         <i id="icono" class="fa-solid fa-caret-right"></i>
-    </div>
-    <div id="btnProductos" class="w-full text-gray-100 hidden flex flex-col bg-gray-700">
-        <a href="producto.php" class="pl-10 py-5 pr-5 hover:bg-gray-400">Productos</a>
-        <a href="categoria.php" class="pl-10 py-5 pr-5 hover:bg-gray-400">Categoría</a>
-        <a href="subcategoria.php" class="pl-10 py-5 pr-5 hover:bg-gray-400">Sub Categoría</a>
+    </button>
+    <div id="btnProductos" class="w-full text-gray-100 hidden flex flex-col bg-gray-700 ">
+        <a href="producto.php" class="pl-10 py-5 pr-5 hover:bg-gray-400 transition">Productos</a>
+        <a href="categoria.php" class="pl-10 py-5 pr-5 hover:bg-gray-400 transition">Categoría</a>
+        <a href="subcategoria.php" class="pl-10 py-5 pr-5 hover:bg-gray-400 transition">Sub Categoría</a>
     </div>
     <a href="#" class="p-5 w-full text-gray-100 hover:bg-gray-400">
         <i class="fa-solid fa-money-bill mr-2"></i>Ventas</a>

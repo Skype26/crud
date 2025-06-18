@@ -1,4 +1,4 @@
-<footer class="bg-gray-800 text-white flex flex-col items-center mt-15">
+<footer class="bg-sky-950 text-gray-200 flex flex-col items-center mt-15">
     <div class="my-15 flex flex-col items-center text-center gap-2">
         <h1 class="font-bold text-3xl">UNIVERSIDAD JOSÉ FAUSTINO SANCHEZ CARRIÓN</h1>
         <h1 class="text-2xl">Facultad de Ingeniería Industrial, Sistemas e Informática</h1>

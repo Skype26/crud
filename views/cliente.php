@@ -87,14 +87,14 @@ include_once("../includes/head.php");
                 <!-- TITULO -->
                 <div class="flex justify-between items-center">
                     <h1 class="p-10 text-5xl font-bold">Lista Clientes</h1>
-                    <button class="m-10 bg-green-300 hover:bg-green-400 p-3 rounded-lg cursor-pointer"
-                        onclick="document.getElementById('ModalAgregar').classList.toggle('hidden')">
+                    <button id="btnAgregar" 
+                    class="m-10 text-white text-lg bg-green-400 p-3 rounded-lg cursor-pointer hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-green-500">
                         <i class="fa-solid fa-plus"></i>
                         Agregar
                     </button>
 
                     <!-- FONDO AGREGAR -->
-                    <div id="ModalAgregar" class="hidden fixed inset-0 bg-black/70 flex items-center z-50">
+                    <div id="ModalAgregar" class="fixed inset-0 bg-black/70 flex items-center z-50 opacity-0 pointer-events-none transition-opacity duration-500 ease-in-out">
                         <!-- MODAL -->
                         <form method="POST" class="bg-white w-1/2 mx-auto p-15 rounded-lg ">
                             <!-- RESPUESTA -->
@@ -116,29 +116,29 @@ include_once("../includes/head.php");
                                 }
                             }
                             ?>
-                            <div class="flex flex-col w-3/4 mx-auto ">
+                            <div class="flex flex-col w-3/4 mx-auto text-lg">
                                 <input name="agregar" class="hidden" readonly>
                                 <label class="mb-3">Nombre:</label>
-                                <input name="txt_nombre" class="border rounded px-4 py-2 mb-5" type="text"
+                                <input name="txt_nombre" class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg" type="text"
                                     placeholder="Ingrese su Nombre">
                                 <label class="mb-3">Apellido:</label>
-                                <input name="txt_apellido" class="border rounded px-4 py-2 mb-5" type="text"
+                                <input name="txt_apellido" class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg" type="text"
                                     placeholder="Ingrese su Apellido">
                                 <label class="mb-3">Direccion:</label>
-                                <input name="txt_direccion" class="border rounded px-4 py-2 mb-5" type="text"
+                                <input name="txt_direccion" class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg" type="text"
                                     placeholder="e.j. Av. Ejemplo / Urb. Ejemplo">
                                 <label class="mb-3">Email:</label>
-                                <input name="txt_email" class="border  rounded px-4 py-2 mb-5" type="text"
+                                <input name="txt_email" class="border  rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg" type="text"
                                     placeholder="example@gmail.com">
                                 <label class="mb-3">Telefono:</label>
-                                <input name="txt_telefono" class="border  rounded px-4 py-2 mb-5" type="text"
+                                <input name="txt_telefono" class="border  rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg" type="text"
                                     placeholder="Numero de Telefono">
                             </div>
-                            <div class="text-white flex justify-center items-center mt-5">
-                                <input class="m-2 bg-green-500 hover:bg-green-400 p-3 rounded-lg cursor-pointer"
+                            <div class="text-lg text-white flex justify-center items-center mt-5">
+                                <input class="m-2 bg-green-500 hover:bg-green-400 p-4 rounded-lg cursor-pointer transition hover:shadow-lg hover:-translate-y-1 hover:scale-110"
                                     type="submit" value="Agregar">
                                 <button id="btnCancelar" type="button"
-                                    class="m-2 bg-red-400 hover:bg-red-300 p-3 rounded-lg cursor-pointer">
+                                    class="m-2 bg-red-400 hover:bg-red-300 p-4 rounded-lg cursor-pointer transition hover:shadow-lg hover:-translate-y-1 hover:scale-110">
                                     Cancelar
                                 </button>
                             </div>
@@ -146,7 +146,7 @@ include_once("../includes/head.php");
                     </div>
 
                     <!-- FONDO EDITAR -->
-                    <div id="ModalEditar" class="hidden fixed inset-0 bg-black/70 flex items-center z-50">
+                    <div id="ModalEditar" class="fixed inset-0 bg-black/70 flex items-center z-50 transition-opacity pointer-events-none opacity-0 duration-500">
                         <!-- MODAL -->
                         <form method="POST" class="bg-white w-1/2 mx-auto p-15 rounded-lg ">
                             <!-- RESPUESTA -->
@@ -238,12 +238,12 @@ include_once("../includes/head.php");
                                 echo "<td class='p-5'>" . $telefono . "</td>";
                                 echo "<td class='p-5'>" . $fecha . "</td>";
                                 echo "<td class='flex items-center text-white justify-center'>
-                                    <a href='cliente.php?id=" . $id . "&m=2' class='m-2 bg-blue-500 hover:bg-blue-600 p-3 rounded-lg'>
+                                    <a href='cliente.php?id=" . $id . "&m=2' class='m-2 transition bg-blue-500 hover:bg-blue-600 hover:shadow-lg p-3 rounded-lg'>
                                         <i class='fa-solid fa-pen mr-3'></i>Editar
                                     </a>
                                     <form method='POST'>
                                         <input type='hidden' name='eliminar_id' value='" . $id . "'>
-                                        <button type='submit' class='m-2 bg-red-500 hover:bg-red-600 p-3 rounded-lg cursor-pointer' onclick=\"return confirm('¿Seguro que deseas eliminar este cliente?');\">
+                                        <button type='submit' class='m-2 transition hover:shadow-lg bg-red-500 hover:bg-red-600 p-3 rounded-lg cursor-pointer' onclick=\"return confirm('¿Seguro que deseas eliminar este cliente?');\">
                                             <i class='fa-solid fa-trash mr-3'></i>Eliminar
                                         </button>
                                     </form>
