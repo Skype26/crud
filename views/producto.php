@@ -6,21 +6,21 @@ if (isset($_POST['ids'])) {
     $ids = array_map('intval', $_POST['ids']);
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
 
-    $stmt = $enlace->prepare("DELETE FROM tb_clientes WHERE id_cliente IN ($placeholders)");
+    $stmt = $enlace->prepare("DELETE FROM tb_producto WHERE id_prod IN ($placeholders)");
     $types = str_repeat('i', count($ids));
     $stmt->bind_param($types, ...$ids);
     $stmt->execute();
-    header("Location: cliente.php?deleted=1");
+    header("Location: producto.php?deleted=1");
 }
 
 //ELIMINAR
 if (isset($_GET['id']) && isset($_GET['d'])) {
     $eliminar_id = !empty($_GET['id']) ? $_GET['id'] : "";
-    $stmt = $enlace->prepare("DELETE FROM tb_clientes WHERE id_cliente = ?");
+    $stmt = $enlace->prepare("DELETE FROM tb_producto WHERE id_prod = ?");
     $stmt->bind_param("i", $eliminar_id);
     $stmt->execute();
     $stmt->close();
-    header("Location: cliente.php?deleted=1");
+    header("Location: producto.php?deleted=1");
     exit;
 }
 
@@ -50,29 +50,31 @@ if (isset($_POST['agregar'])) {
 // EDITAR
 if (isset($_GET['id'])) {
     $id = !empty($_GET['id']) ? $_GET['id'] : "";
-    $stmt = $enlace->prepare('SELECT nom_cliente, ape_cliente, dir_cliente, email_cliente, tel_cliente, freg_cliente FROM tb_clientes WHERE id_cliente = (?)');
+    $stmt = $enlace->prepare('SELECT p.nom_prod, p.det_prod, p.mod_prod, p.mar_prod, c_sub.id_cat, concat(c_padre.nombre_cat," - ", c_sub.nombre_cat) AS Nombre_Categoria, p.prec_prod, p.st_prod FROM tb_producto AS p JOIN tb_categoria AS c_sub ON p.cat_prod = c_sub.id_cat LEFT JOIN tb_categoria AS c_padre ON c_sub.id_categoria_padre = c_padre.id_cat WHERE id_prod = (?);');
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($nombre, $apellido, $direccion, $email, $telefono, $fecha);
+    $stmt->bind_result($nombreE, $detalleE, $modeloE, $marcaE, $id_categoriaE, $nom_catE, $precioE, $stockE);
     $stmt->fetch();
 }
 if (isset($_POST['editar'])) {
     $nombre = trim($_POST["txt_nombre"]);
-    $apellido = trim($_POST["txt_apellido"]);
-    $direccion = trim($_POST["txt_direccion"]);
-    $email = trim($_POST["txt_email"]);
-    $telefono = trim($_POST["txt_telefono"]);
+    $detalles = trim($_POST["txt_detalle"]);
+    $modelo = trim($_POST["txt_modelo"]);
+    $marca = trim($_POST["txt_marca"]);
+    $scat = trim($_POST["txt_categoria"]);
+    $precio = trim($_POST["txt_precio"]);
+    $stock = trim($_POST["txt_stock"]);
 
-    if (!empty($nombre) && !empty($apellido) && !empty($direccion) && !empty($email) && is_numeric(($telefono))) {
-        $stmt = $enlace->prepare("UPDATE tb_clientes SET nom_cliente=?, ape_cliente=?, dir_cliente=?, email_cliente=?, tel_cliente=? WHERE id_cliente=?");
-        $stmt->bind_param("ssssss", $nombre, $apellido, $direccion, $email, $telefono, $id);
+    if (!empty($nombre) && !empty($detalles) && !empty($modelo) && !empty($marca) && !empty($scat) && is_numeric(($precio)) && is_numeric(($stock))) {
+        $stmt = $enlace->prepare("UPDATE tb_producto SET nom_prod = (?), det_prod = (?),  mod_prod = (?), mar_prod = (?), cat_prod = (?), prec_prod = (?), st_prod = (?) WHERE id_prod = (?);");
+        $stmt->bind_param("ssssidii", $nombre, $detalles, $modelo, $marca, $scat, $precio, $stock, $id);
         $stmt->execute();
         $stmt->close();
-        header("Location: cliente.php?id=" . $id . " &s=1&m=2");
+        header("Location: producto.php?id=" . $id . " &s=1&m=2");
         exit;
     } else {
-        header("Location: cliente.php?id=" . $id . " &e=1&m=2");
+        header("Location: producto.php?id=" . $id . " &e=1&m=2");
         exit;
     }
 }
@@ -198,9 +200,9 @@ include_once("../includes/head.php");
                         class="fixed inset-0 bg-black/70 flex items-center z-50 transition-opacity pointer-events-none opacity-0 duration-500">
                         <!-- MODAL -->
                         <form method="POST" class="relative bg-white w-1/2 mx-auto p-15 rounded-lg ">
-                            <button id="btnCancelarE" type="button"
-                                class="absolute mr-12 mt-12 right-0 top-0 scale-150"><i
-                                    class="fa-solid fa-x text-gray-500 hover:text-black cursor-pointer"></i></button>
+                            <button onclick="window.location.href='producto.php';" type="button"
+                                class="absolute right-0 top-0 scale-150"><i
+                                    class="fa-solid fa-x mr-12 mt-12 text-gray-500 hover:text-black cursor-pointer"></i></button>
                             <h1 class="text-center font-bold text-4xl mb-4">Editar</h1>
                             <!-- RESPUESTA -->
                             <?php
@@ -221,26 +223,54 @@ include_once("../includes/head.php");
                                 }
                             }
                             ?>
-                            <div class="flex flex-col w-3/4 mx-auto ">
-                                <label class="mb-3">ID:</label>
-                                <input class="bg-gray-200 border rounded px-4 py-2 mb-5" type="text" readonly
-                                    value="<?php echo $id ?>">
+                            <div class="flex w-3/4 mx-auto text-lg justify-center">
                                 <input name="editar" class="hidden" readonly>
-                                <label class="mb-3">Nombre:</label>
-                                <input name="txt_nombre" class="border rounded px-4 py-2 mb-5" type="text"
-                                    placeholder="Ingrese su Nombre" value="<?php echo $nombre ?>">
-                                <label class="mb-3">Apellido:</label>
-                                <input name="txt_apellido" class="border rounded px-4 py-2 mb-5" type="text"
-                                    placeholder="Ingrese su Apellido" value="<?php echo $apellido ?>">
-                                <label class="mb-3">Direccion:</label>
-                                <input name="txt_direccion" class="border rounded px-4 py-2 mb-5" type="text"
-                                    placeholder="e.j. Av. Ejemplo / Urb. Ejemplo" value="<?php echo $direccion ?>">
-                                <label class="mb-3">Email:</label>
-                                <input name="txt_email" class="border  rounded px-4 py-2 mb-5" type="text"
-                                    placeholder="example@gmail.com" value="<?php echo $email ?>">
-                                <label class="mb-3">Telefono:</label>
-                                <input name="txt_telefono" class="border  rounded px-4 py-2 mb-5" type="text"
-                                    placeholder="Numero de Telefono" value="<?php echo $telefono ?>">
+                                <div class="flex flex-col mx-4">
+                                    <label class="mb-3">ID:</label>
+                                    <input class="bg-gray-200 border rounded px-4 py-2 mb-5" type="text" readonly
+                                        value="<?php echo $id ?>">
+                                    <label class="mb-3">Nombre:</label>
+                                    <input name="txt_nombre" value="<?php echo $nombreE ?>"
+                                        class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg"
+                                        type="text" placeholder="Ingrese un Nombre">
+                                    <label class="mb-3">Detalles:</label>
+                                    <input name="txt_detalle" value="<?php echo $detalleE ?>"
+                                        class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg"
+                                        type="text" placeholder="Ingrese un Detalle">
+                                    <label class="mb-3">Modelo:</label>
+                                    <input name="txt_modelo" value="<?php echo $modeloE ?>"
+                                        class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg"
+                                        type="text" placeholder="Ingrese un Modelo">
+                                    <label class="mb-3">Marca:</label>
+                                    <input name="txt_marca" value="<?php echo $marcaE ?>"
+                                        class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg"
+                                        type="text" placeholder="Ingrese una Marca">
+                                </div>
+                                <div class="flex flex-col mx-4">
+                                    <label class="mb-3">Categoría:</label>
+                                    <select name="txt_categoria"
+                                        class="border rounded px-4 py-2 mx-auto mb-5 transition focus:scale-105 focus:shadow-lg">
+                                        <option value="<?php echo $id_categoriaE ?>"><?php echo $nom_catE ?></option>
+                                        <?php
+                                        $stmt = $enlace->prepare("SELECT h.id_cat, CONCAT(p.nombre_cat, ' - ', h.nombre_cat) AS nombre_categoria_completa FROM tb_categoria AS h JOIN tb_categoria AS p ON h.id_categoria_padre = p.id_cat WHERE h.id_categoria_padre IS NOT NULL AND h.id_cat <> ? ORDER BY h.id_cat;");
+                                        $stmt->bind_param("i", $id_categoriaE);
+                                        $stmt->execute();
+                                        $stmt->store_result();
+                                        $stmt->bind_result($id_listar_cat, $nombre_listar_cat);
+                                        while ($stmt->fetch()) {
+                                            echo "<option value='" . $id_listar_cat . "'>" . $nombre_listar_cat . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                    <label class="mb-3">Stock:</label>
+                                    <input name="txt_stock" value="<?php echo $stockE ?>"
+                                        class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg"
+                                        type="text" placeholder="Ingrese un Stock">
+                                    <label class="mb-3">Precio:</label>
+                                    <input name="txt_precio" value="<?php echo $precioE ?>"
+                                        class="border rounded px-4 py-2 mb-5 transition focus:scale-105 focus:shadow-lg"
+                                        type="text" placeholder="Ingrese un Precio">
+                                </div>
                             </div>
                             <div class="text-white flex justify-center items-center mt-5">
                                 <input class="m-2 bg-green-500 hover:bg-green-400 p-3 rounded-lg cursor-pointer"
@@ -308,10 +338,10 @@ include_once("../includes/head.php");
                                     echo "<td class='p-5'>" . $stock . "</td>";
                                     echo "<td class='p-5 text-right'>" . $precio . "</td>";
                                     echo "<td class='flex items-center text-white justify-center'>
-                                    <a href='cliente.php?id=" . $id . "&m=2' class='m-2 transition bg-blue-500 hover:bg-blue-600 hover:shadow-lg p-3 rounded-lg'>
+                                    <a href='producto.php?id=" . $id . "&m=2' class='m-2 transition bg-blue-500 hover:bg-blue-600 hover:shadow-lg p-3 rounded-lg'>
                                         <i class='fa-solid fa-pen mr-3'></i>Editar
                                     </a>
-                                    <a href='cliente.php?id=" . $id . "&d=1' onclick=\"return confirm('¿Seguro que deseas eliminar este cliente?');\" class='m-2 transition hover:shadow-lg bg-red-500 hover:bg-red-600 p-3 rounded-lg cursor-pointer'>
+                                    <a href='producto.php?id=" . $id . "&d=1' onclick=\"return confirm('¿Seguro que deseas eliminar este cliente?');\" class='m-2 transition hover:shadow-lg bg-red-500 hover:bg-red-600 p-3 rounded-lg cursor-pointer'>
                                         <i class='fa-solid fa-trash mr-3'></i>Eliminar
                                     </a>
                                     </td>";
