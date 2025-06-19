@@ -26,15 +26,43 @@ $(document).ready(function () {
         $("#btnProductos").toggleClass("hidden");
         $("#icono").toggleClass("fa-caret-down");
     });
-    $(".checkbox").on('change',function(){
-        if($(".checkbox:checked").length > 0){
-            $("#btnEliminarTodos").removeClass("hidden");
+
+    $(".checkbox").on('change', function () {
+        if ($(".checkbox:checked").length > 0) {
+            $("#seleccion").text(`${$(".checkbox:checked").length} Fila(s) Seleccionada(s)`);
+            $("#tituloEliminarSeleccion").removeClass("hidden");
             $("#lista").addClass("hidden");
-            $("#seleccion").removeClass("hidden");
-        } else{
-            $("#btnEliminarTodos").addClass("hidden");
+            $("#btnAgregar").addClass("hidden");
+        } else {
+            $("#tituloEliminarSeleccion").addClass("hidden");
             $("#lista").removeClass("hidden");
-            $("#seleccion").addClass("hidden");
+            $("#btnAgregar").removeClass("hidden");
+        }
+
+        if ($(".checkbox:checked").length === $(".checkbox").length) {
+            $(".checkboxPadre").prop('checked', true);
+        } else {
+            $(".checkboxPadre").prop('checked', false);
+        }
+    });
+
+    $(".checkboxPadre").on('change', function () {
+        $(".checkbox").prop('checked', $(".checkboxPadre").prop('checked'));
+        if ($(".checkboxPadre").prop('checked')) {
+            $("#seleccion").text(`${$(".checkbox:checked").length} Fila(s) Seleccionada(s)`);
+            $("#tituloEliminarSeleccion").removeClass("hidden");
+            $("#lista").addClass("hidden");
+            $("#btnAgregar").addClass("hidden");
+            $(".fila").addClass("bg-gray-200");
+            $(".fila").removeClass("hover:bg-gray-200");
+            $(".fila").addClass("hover:bg-white");
+        } else {
+            $("#tituloEliminarSeleccion").addClass("hidden");
+            $("#btnAgregar").removeClass("hidden");
+            $("#lista").removeClass("hidden");
+            $(".fila").removeClass("bg-gray-200");
+            $(".fila").addClass("hover:bg-gray-200");
+            $(".fila").removeClass("hover:bg-white");
         }
     });
 });

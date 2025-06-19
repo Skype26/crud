@@ -1,10 +1,19 @@
 <?php
 include_once("../conexion/conexion.php");
 
-// ELIMINAR
+// ELIMINAR SELECCIONADOS
 if (isset($_POST['ids'])) {
-    // pendiente
+    $ids = array_map('intval', $_POST['ids']);
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+    $stmt = $enlace->prepare("DELETE FROM tb_clientes WHERE id_cliente IN ($placeholders)");
+    $types = str_repeat('i', count($ids));
+    $stmt->bind_param($types, ...$ids);
+    $stmt->execute();
+    header("Location: cliente.php?deleted=1");
 }
+
+//ELIMINAR
 if (isset($_GET['id']) && isset($_GET['d'])) {
     $eliminar_id = !empty($_GET['id']) ? $_GET['id'] : "";
     $stmt = $enlace->prepare("DELETE FROM tb_clientes WHERE id_cliente = ?");
@@ -14,8 +23,6 @@ if (isset($_GET['id']) && isset($_GET['d'])) {
     header("Location: cliente.php?deleted=1");
     exit;
 }
-
-
 
 // INSERTAR
 if (isset($_POST['agregar'])) {
@@ -92,22 +99,14 @@ include_once("../includes/head.php");
                 <!-- TITULO -->
                 <div class="flex justify-between items-center">
 
-                    <h1 id="lista" class="p-10 text-5xl font-bold">Lista Clientes</h1>
-                    <h1 id="seleccion" class="hidden p-10 text-5xl font-bold">Seleccionar filas</h1>
                     <!-- BOTONES TITULO -->
+                    <h1 id="lista" class="p-10 text-5xl font-bold">Lista Clientes</h1>
                     <div class="flex justify-center items-center">
                         <button id="btnAgregar"
                             class="mr-10 my-4 text-white text-lg bg-green-400 p-3 rounded-lg cursor-pointer hover:shadow-lg transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-green-500">
                             <i class="fa-solid fa-plus"></i>
                             Agregar
                         </button>
-                        <!-- <input name="eliminarSeleccionados" type="hidden" value="1"> -->
-                        <!-- <button id="btnEliminarTodos" type="submit"
-                            onclick="return confirm('Estas seguro que deseas borrar las filas seleccionadas?')"
-                            class="hidden mr-10 my-4 text-white text-lg bg-red-500 p-3 rounded-lg cursor-pointer hover:shadow-lg transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-red-600">
-                            <i class="fa-solid fa-trash"></i>
-                            Elminar Seleccionados
-                        </button> -->
                     </div>
 
                     <!-- FONDO AGREGAR -->
@@ -195,7 +194,7 @@ include_once("../includes/head.php");
                             ?>
                             <div class="flex flex-col w-3/4 mx-auto ">
                                 <label class="mb-3">ID:</label>
-                                <input class="border rounded px-4 py-2 mb-5" type="text" readonly
+                                <input class="bg-gray-200 border rounded px-4 py-2 mb-5" type="text" readonly
                                     value="<?php echo $id ?>">
                                 <input name="editar" class="hidden" readonly>
                                 <label class="mb-3">Nombre:</label>
@@ -234,21 +233,34 @@ include_once("../includes/head.php");
 
                 <!-- TABLA -->
                 <div class="w-full">
-                    <form method="POST" action="">
+                    <form method="POST" class="flex flex-col">
+                        <div id="tituloEliminarSeleccion" class="flex justify-left items-center hidden">
+
+                            <!-- BOTONES TITULO ELIMINAR -->
+                            <button id="btnEliminarTodos" type="submit"
+                                onclick="return confirm('Estas seguro que deseas borrar las filas seleccionadas?')"
+                                class="mx-6 my-4 text-white text-lg bg-red-500 p-3 rounded-lg cursor-pointer hover:shadow-lg transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-red-600">
+                                <i class="fa-solid fa-trash"></i>
+                                Elminar Seleccionados
+                            </button>
+                            <spam class="text-blue-600 mr-2"><i class="fa-solid fa-circle-check"></i></spam>
+                            <h1 id="seleccion" class="py-5  text-2xl font-bold">Fila(s) Seleccionada(s)</h1>
+
+                        </div>
                         <table class="w-full">
                             <thead>
-                                <tr class="border-y m-3 text-lg">
-                                    <th class="p-4"><input class='accent-sky-700 scale-150  ml-2' type="checkbox"
-                                            value="">
+                                <tr class="border-y border-gray-300 text-lg text-left text-gray-500">
+                                    <th class="py-1 px-3">
+                                        <input class='checkboxPadre accent-blue-600 scale-150  ml-2' type="checkbox">
                                     </th>
-                                    <th class="p-4">ID</th>
-                                    <th class="p-4">Nombre</th>
-                                    <th class="p-4">Apellido</th>
-                                    <th class="p-4">Direccion</th>
-                                    <th class="p-4">Email</th>
-                                    <th class="p-4">Telefono</th>
-                                    <th class="p-4">Fecha de Registro</th>
-                                    <th class="p-4">Opciones</th>
+                                    <th class="py-1 px-5 font-medium text-shadow-md">ID</th>
+                                    <th class="py-1 px-5 font-medium text-shadow-md">NOMBRES</th>
+                                    <th class="py-1 px-5 font-medium text-shadow-md">APELLIDOS</th>
+                                    <th class="py-1 px-5 font-medium text-shadow-md">DIRECCION</th>
+                                    <th class="py-1 px-5 font-medium text-shadow-md">EMAIL</th>
+                                    <th class="py-1 px-5 font-medium text-shadow-md">TELÉFONO</th>
+                                    <th class="py-1 px-5 font-medium text-shadow-md text-right">FECHA DE REGISTRO</th>
+                                    <th class="py-1 px-5 font-medium text-shadow-md text-center">OPCIONES</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -258,15 +270,15 @@ include_once("../includes/head.php");
                                 $stmt->store_result();
                                 $stmt->bind_result($id, $nombre, $apellido, $direccion, $email, $telefono, $fecha);
                                 while ($stmt->fetch()) {
-                                    echo "<tr class='border-y px-4 py-2 text-center'>";
-                                    echo "<td><input name='ids[]' class='checkbox accent-blue-600 scale-150 ml-2' type='checkbox' value='" . $id . "'></td>";
+                                    echo "<tr class='fila transition border-y border-gray-300 px-5 py-2 hover:bg-gray-200 cursor-pointer'>";
+                                    echo "<td class='p-5'><input name='ids[]' class='checkbox accent-blue-600 scale-150' type='checkbox' value='" . $id . "'></td>";
                                     echo "<td class='p-5'>" . $id . "</td>";
                                     echo "<td class='p-5'>" . $nombre . "</td>";
                                     echo "<td class='p-5'>" . $apellido . "</td>";
                                     echo "<td class='p-5'>" . $direccion . "</td>";
                                     echo "<td class='p-5'>" . $email . "</td>";
                                     echo "<td class='p-5'>" . $telefono . "</td>";
-                                    echo "<td class='p-5'>" . $fecha . "</td>";
+                                    echo "<td class='p-5 text-right'>" . $fecha . "</td>";
                                     echo "<td class='flex items-center text-white justify-center'>
                                     <a href='cliente.php?id=" . $id . "&m=2' class='m-2 transition bg-blue-500 hover:bg-blue-600 hover:shadow-lg p-3 rounded-lg'>
                                         <i class='fa-solid fa-pen mr-3'></i>Editar
@@ -278,18 +290,9 @@ include_once("../includes/head.php");
                                     echo "</tr>";
                                 }
                                 ?>
-                                <!-- GET -->
                             </tbody>
                         </table>
-                        <!-- POST -->
-                        <button id="btnEliminarTodos" type="submit"
-                            onclick="return confirm('Estas seguro que deseas borrar las filas seleccionadas?')"
-                            class="hidden mr-10 my-4 text-white text-lg bg-red-500 p-3 rounded-lg cursor-pointer hover:shadow-lg transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-red-600">
-                            <i class="fa-solid fa-trash"></i>
-                            Elminar Seleccionados
-                        </button>
                     </form>
-                    <!-- FORM -->
                 </div>
             </div>
             <?php
