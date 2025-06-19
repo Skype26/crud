@@ -10,12 +10,6 @@ $(document).ready(function () {
         $("#ModalEditar").addClass("opacity-100");
         $("body").toggleClass("overflow-hidden");
     }
-    $("#btnCancelar").click(function () {
-        window.location.href = "cliente.php";
-    });
-    $("#btnCancelarE").click(function () {
-        window.location.href = "cliente.php";
-    });
     $("#btnAgregar").click(function () {
         //APARECE
         $("#ModalAgregar").removeClass("opacity-0 pointer-events-none");

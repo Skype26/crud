@@ -113,7 +113,10 @@ include_once("../includes/head.php");
                     <div id="ModalAgregar"
                         class="fixed inset-0 bg-black/70 flex items-center z-50 opacity-0 pointer-events-none transition-opacity duration-500">
                         <!-- MODAL -->
-                        <form method="POST" class="bg-white w-1/2 mx-auto p-15 rounded-lg">
+                        <form method="POST" class="relative bg-white w-1/2 mx-auto p-15 rounded-lg">
+                            <button onclick="window.location.href='cliente.php';" type="button" class="absolute right-0 top-0 scale-150"><i
+                                    class="fa-solid fa-x mr-12 mt-12 text-gray-500 hover:text-black cursor-pointer"></i></button>
+                            <h1 class="text-center font-bold text-4xl mb-4">Nuevo</h1>
                             <!-- RESPUESTA -->
                             <?php
                             if (isset($_GET['m'])) {
@@ -158,12 +161,8 @@ include_once("../includes/head.php");
                             </div>
                             <div class="text-lg text-white flex justify-center items-center mt-5">
                                 <input
-                                    class="m-2 bg-green-500 hover:bg-green-400 p-4 rounded-lg cursor-pointer transition hover:shadow-lg hover:-translate-y-1 hover:scale-110"
+                                    class="m-2 bg-green-500 hover:bg-green-400 shadow-lg p-4 rounded-lg cursor-pointer transition hover:shadow-lg hover:-translate-y-1 hover:scale-110"
                                     type="submit" value="Agregar">
-                                <button id="btnCancelar" type="button"
-                                    class="m-2 bg-red-400 hover:bg-red-300 p-4 rounded-lg cursor-pointer transition hover:shadow-lg hover:-translate-y-1 hover:scale-110">
-                                    Cancelar
-                                </button>
                             </div>
                         </form>
                     </div>
@@ -172,7 +171,10 @@ include_once("../includes/head.php");
                     <div id="ModalEditar"
                         class="fixed inset-0 bg-black/70 flex items-center z-50 transition-opacity pointer-events-none opacity-0 duration-500">
                         <!-- MODAL -->
-                        <form method="POST" class="bg-white w-1/2 mx-auto p-15 rounded-lg ">
+                        <form method="POST" class="relative bg-white w-1/2 mx-auto p-15 rounded-lg ">
+                            <button onclick="window.location.href='producto.php';" type="button" class="absolute mr-12 mt-12 right-0 top-0 scale-150"><i
+                                    class="fa-solid fa-x text-gray-500 hover:text-black cursor-pointer"></i></button>
+                            <h1 class="text-center font-bold text-4xl mb-4">Editar</h1>
                             <!-- RESPUESTA -->
                             <?php
                             if (isset($_GET['m'])) {
@@ -216,10 +218,6 @@ include_once("../includes/head.php");
                             <div class="text-white flex justify-center items-center mt-5">
                                 <input class="m-2 bg-green-500 hover:bg-green-400 p-3 rounded-lg cursor-pointer"
                                     type="submit" value="Editar">
-                                <button id="btnCancelarE" type="button"
-                                    class="m-2 bg-red-400 hover:bg-red-300 p-3 rounded-lg cursor-pointer">
-                                    Cancelar
-                                </button>
                             </div>
                         </form>
                     </div>
